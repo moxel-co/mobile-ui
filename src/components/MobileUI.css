@@ -1,0 +1,66 @@
+.mobile-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  overflow: hidden;
+  z-index: 100; /* Above 3D scene */
+  pointer-events: none; /* Allow 3D interaction through the UI */
+}
+
+.content-overlay {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  right: 20px;
+  z-index: 101;
+  pointer-events: none;
+}
+
+.title {
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.active-option {
+  color: #ffeb3b;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.active-submenu-item {
+  color: #64ffda;
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
+  
+  .active-option {
+    font-size: 14px;
+  }
+  
+  .active-submenu-item {
+    font-size: 12px;
+  }
+  
+  .content-overlay {
+    top: 40px;
+    left: 16px;
+    right: 16px;
+  }
+}

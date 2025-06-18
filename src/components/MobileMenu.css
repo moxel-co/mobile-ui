@@ -1,0 +1,358 @@
+.mobile-menu {
+  height: 50px;
+  background: #000000;
+  border-top: 1px solid #333;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: visible;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  pointer-events: auto; /* Enable interaction with menu */
+}
+
+.nav-scroll-container {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 20px;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.nav-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-scroll-container:active {
+  cursor: grabbing;
+}
+
+.nav-item {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.nav-item:focus {
+  outline: none;
+}
+
+/* INACTIVE STATE - Default state for all items */
+.nav-item.inactive {
+  color: #666;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.nav-item.inactive:hover {
+  color: #888;
+  opacity: 0.9;
+}
+
+/* ACTIVE STATE - Only for the currently selected item */
+.nav-item.active {
+  color: #ffeb3b;
+  font-weight: 500;
+  opacity: 1;
+}
+
+.nav-item.active:hover {
+  color: #fff200;
+}
+
+.nav-label {
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+/* Active indicator - only shows for active items */
+.active-indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: #ffeb3b;
+  border-radius: 1px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 20px;
+    opacity: 1;
+  }
+}
+
+/* Submenu Styles - Fixed overflow and proper scrolling */
+.submenu-container {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  z-index: 1001;
+  overflow: hidden;
+  /* Add padding to prevent edge cutoff */
+  padding: 0 10px;
+  pointer-events: auto; /* Enable interaction with submenu */
+}
+
+.submenu-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 10px;
+  height: 100%;
+  cursor: grab;
+  width: 100%;
+  /* Remove centering when scrollable to prevent overflow issues */
+  justify-content: flex-start;
+}
+
+.submenu-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.submenu-scroll:active {
+  cursor: grabbing;
+}
+
+/* Center items only when they fit within the container */
+.submenu-scroll[data-scrollable="false"] {
+  justify-content: center;
+}
+
+/* Ensure items don't get cut off at edges */
+.submenu-scroll[data-scrollable="true"] {
+  justify-content: flex-start;
+}
+
+.submenu-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 50px;
+  /* Ensure consistent spacing */
+  margin: 0 2px;
+}
+
+.submenu-label {
+  color: white;
+  font-size: 10px;
+  font-weight: normal;
+  text-align: center;
+  min-height: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.submenu-item {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  transition: all 0.2s ease;
+  /* Prevent shrinking */
+  flex-shrink: 0;
+  position: relative;
+}
+
+.submenu-item:focus {
+  outline: none;
+}
+
+/* Regular active/inactive states for non-toggleable items */
+.submenu-item.active {
+  opacity: 1;
+  background: white;
+  transform: scale(1.05);
+}
+
+.submenu-item.inactive {
+  opacity: 0.2;
+  background: white;
+}
+
+/* Toggle states for toggleable items - only yellow highlight when toggled */
+.submenu-item.toggled {
+  opacity: 1;
+  background: #ffeb3b; /* Yellow when toggled on */
+  transform: scale(1.05);
+}
+
+.submenu-item.toggled .submenu-icon {
+  color: black !important;
+}
+
+.submenu-item.untoggled {
+  opacity: 0.2;
+  background: white; /* Default white when toggled off */
+}
+
+.submenu-item.untoggled .submenu-icon {
+  color: black !important;
+}
+
+.submenu-item:hover {
+  background: #f0f0f0;
+}
+
+.submenu-item.toggled:hover {
+  background: #fff200; /* Brighter yellow on hover */
+}
+
+.submenu-item.untoggled:hover {
+  background: #f0f0f0; /* Light gray on hover */
+}
+
+.submenu-icon {
+  color: black !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .mobile-menu {
+    height: 40px;
+  }
+  
+  .nav-scroll-container {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-width: 70px;
+  }
+
+  .submenu-container {
+    bottom: 40px;
+    height: 70px;
+    padding: 0 8px;
+  }
+
+  .submenu-scroll {
+    gap: 6px;
+    padding: 0 8px;
+  }
+
+  .submenu-item {
+    width: 40px;
+    height: 40px;
+  }
+
+  .submenu-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .submenu-label {
+    font-size: 9px;
+    max-width: 50px;
+  }
+
+  .submenu-item-wrapper {
+    min-width: 45px;
+    margin: 0 1px;
+  }
+}
+
+/* Safe area for devices with home indicator */
+@media (max-width: 768px) {
+  .mobile-menu {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* iPhone X and newer models */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-menu {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Scroll indicators for better UX */
+.submenu-container::before,
+.submenu-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  z-index: 1002;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.submenu-container::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.3), transparent);
+}
+
+.submenu-container::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0.3), transparent);
+}
+
+.submenu-container[data-can-scroll-left="true"]::before {
+  opacity: 1;
+}
+
+.submenu-container[data-can-scroll-right="true"]::after {
+  opacity: 1;
+}
