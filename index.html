@@ -7,8 +7,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#1a1a1a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
     <title>Mobile 3D App</title>
     <style>
+      :root {
+        --safe-area-inset-top: env(safe-area-inset-top, 0px);
+        --safe-area-inset-right: env(safe-area-inset-right, 0px);
+        --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-area-inset-left: env(safe-area-inset-left, 0px);
+        --vh: 1vh;
+      }
+      
       * {
         margin: 0;
         padding: 0;
@@ -17,8 +27,10 @@
       
       html {
         height: 100%;
-        height: 100vh;
-        height: -webkit-fill-available;
+        width: 100%;
+        overflow: hidden;
+        position: fixed;
+        -webkit-text-size-adjust: 100%;
       }
       
       body {
@@ -28,21 +40,29 @@
         -webkit-user-select: none;
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
-        height: 100%;
-        height: 100vh;
-        height: -webkit-fill-available;
+        height: calc(var(--vh, 1vh) * 100);
         overflow: hidden;
         position: fixed;
         width: 100%;
         background: #1a1a1a;
+        touch-action: manipulation;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
       
       #root {
         width: 100vw;
-        height: 100vh;
-        height: -webkit-fill-available;
+        height: calc(var(--vh, 1vh) * 100);
         overflow: hidden;
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
       }
       
       /* Prevent zoom on double tap */
@@ -53,22 +73,49 @@
       /* Prevent pull-to-refresh */
       body {
         overscroll-behavior-y: contain;
+        overscroll-behavior-x: contain;
       }
       
-      /* iOS specific fixes */
-      @supports (-webkit-touch-callout: none) {
-        body {
-          height: -webkit-fill-available;
-        }
-        
-        #root {
-          height: -webkit-fill-available;
-        }
+      /* Force hardware acceleration */
+      #root {
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Dynamic viewport height fix for mobile browsers
+      function setViewportHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Also set safe area insets for older browsers
+        const safeAreaTop = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0px';
+        const safeAreaBottom = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom') || '0px';
+        const safeAreaLeft = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-left') || '0px';
+        const safeAreaRight = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-right') || '0px';
+        
+        console.log('Viewport Height:', window.innerHeight);
+        console.log('Safe Area Top:', safeAreaTop);
+        console.log('Safe Area Bottom:', safeAreaBottom);
+        console.log('Safe Area Left:', safeAreaLeft);
+        console.log('Safe Area Right:', safeAreaRight);
+      }
+      
+      setViewportHeight();
+      window.addEventListener('resize', setViewportHeight);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(setViewportHeight, 100);
+      });
+      
+      // Additional mobile browser fixes
+      window.addEventListener('load', () => {
+        setTimeout(setViewportHeight, 100);
+      });
+    </script>
   </body>
 </html>

@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Environment } from '@react-three/drei'
 import { Mesh } from 'three'
-import MobileUI from './components/MobileUI'
+import MobileMenu from './components/MobileMenu'
 import { useStore } from './store/useStore'
 
 function RotatingCube() {
@@ -68,8 +68,8 @@ function App() {
         />
       </Canvas>
       
-      {/* Mobile UI Overlay */}
-      <MobileUI />
+      {/* Mobile Menu with UI Overlay */}
+      <MobileMenu />
     </div>
   )
 }

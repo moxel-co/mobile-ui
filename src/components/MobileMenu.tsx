@@ -3,14 +3,9 @@ import { menuItems, getSubmenuItems, hasSubmenu } from '../data/menuItems'
 import { useStore } from '../store/useStore'
 import './MobileMenu.css'
 
-interface MobileMenuProps {
-  activeOption: string | null
-  onOptionChange: (option: string | null) => void
-  activeSubmenuItem: string | null
-  onSubmenuItemChange: (item: string | null) => void
-}
-
-function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenuItemChange }: MobileMenuProps) {
+function MobileMenu() {
+  const [activeOption, setActiveOption] = useState<string | null>(null) // Start with no active option
+  const [activeSubmenuItem, setActiveSubmenuItem] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null!)
   const submenuScrollRef = useRef<HTMLDivElement>(null!)
   const submenuContainerRef = useRef<HTMLDivElement>(null!)
@@ -21,9 +16,9 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
   const [showSubmenu, setShowSubmenu] = useState(false)
 
   // Zustand store actions and state
-  const { setSelectedItem, toggleSetting, getToggleState, getSelectedItem, setCubeColor, setEnvironmentPreset } = useStore()
+  const { setSelectedItem, toggleSetting, getToggleState, getSelectedItem, setCubeColor, setEnvironmentPreset, cubeColor, environmentPreset } = useStore()
 
-  // Auto-scroll to active option
+  // Auto-scroll to active option - remove smooth scrolling
   useEffect(() => {
     if (activeOption && scrollRef.current) {
       const activeIndex = menuItems.findIndex(item => item.id === activeOption)
@@ -36,10 +31,8 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
           const itemWidth = item.offsetWidth
           const scrollLeft = itemLeft - (containerWidth / 2) + (itemWidth / 2)
           
-          container.scrollTo({
-            left: scrollLeft,
-            behavior: 'smooth'
-          })
+          // Remove smooth scrolling - instant scroll
+          container.scrollLeft = scrollLeft
         }
       }
     }
@@ -53,11 +46,11 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
         // Check if we have a stored selection for this menu
         const storedSelection = getSelectedItem(activeOption)
         if (storedSelection && currentSubmenuItems.some(item => item.label === storedSelection)) {
-          onSubmenuItemChange(storedSelection)
+          setActiveSubmenuItem(storedSelection)
         } else {
           // Default to first item if no stored selection or stored item doesn't exist
           const firstItem = currentSubmenuItems[0]
-          onSubmenuItemChange(firstItem.label)
+          setActiveSubmenuItem(firstItem.label)
           if (!firstItem.toggleable) {
             setSelectedItem(activeOption, firstItem.label)
             // If it's a color item, update the cube color
@@ -71,12 +64,12 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
           }
         }
       } else {
-        onSubmenuItemChange(null)
+        setActiveSubmenuItem(null)
       }
     } else {
-      onSubmenuItemChange(null)
+      setActiveSubmenuItem(null)
     }
-  }, [activeOption, onSubmenuItemChange, getSelectedItem, setSelectedItem, setCubeColor, setEnvironmentPreset])
+  }, [activeOption, getSelectedItem, setSelectedItem, setCubeColor, setEnvironmentPreset])
 
   // Update submenu scroll indicators and scrollable state
   useEffect(() => {
@@ -104,7 +97,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     }
   }, [showSubmenu, activeOption])
 
-  // Main navigation touch handlers
+  // Main navigation touch handlers - increase responsiveness
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX)
     setIsDragging(true)
@@ -117,7 +110,8 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     const diffX = startX - currentX
     
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += diffX * 0.5
+      // Increase multiplier for more responsive scrolling
+      scrollRef.current.scrollLeft += diffX * 1.2
     }
     
     setStartX(currentX)
@@ -139,7 +133,8 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     const diffX = startX - currentX
     
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += diffX * 0.5
+      // Increase multiplier for more responsive scrolling
+      scrollRef.current.scrollLeft += diffX * 1.2
     }
     
     setStartX(currentX)
@@ -149,7 +144,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     setIsDragging(false)
   }
 
-  // Submenu touch handlers
+  // Submenu touch handlers - increase responsiveness
   const handleSubmenuTouchStart = (e: React.TouchEvent) => {
     setSubmenuStartX(e.touches[0].clientX)
     setIsSubmenuDragging(true)
@@ -162,7 +157,8 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     const diffX = submenuStartX - currentX
     
     if (submenuScrollRef.current) {
-      submenuScrollRef.current.scrollLeft += diffX * 0.5
+      // Increase multiplier for more responsive scrolling
+      submenuScrollRef.current.scrollLeft += diffX * 1.2
     }
     
     setSubmenuStartX(currentX)
@@ -184,7 +180,8 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     const diffX = submenuStartX - currentX
     
     if (submenuScrollRef.current) {
-      submenuScrollRef.current.scrollLeft += diffX * 0.5
+      // Increase multiplier for more responsive scrolling
+      submenuScrollRef.current.scrollLeft += diffX * 1.2
     }
     
     setSubmenuStartX(currentX)
@@ -197,11 +194,11 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
   const handleMainOptionClick = (optionId: string) => {
     if (optionId === activeOption && showSubmenu) {
       // If clicking the same active option and submenu is showing, deactivate everything
-      onOptionChange(null)
+      setActiveOption(null)
       setShowSubmenu(false)
     } else {
       // Otherwise, activate the option and show submenu if it has items
-      onOptionChange(optionId)
+      setActiveOption(optionId)
       const menuHasSubmenu = hasSubmenu(optionId)
       setShowSubmenu(menuHasSubmenu)
     }
@@ -213,7 +210,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
       toggleSetting(item.settingKey)
     } else if (activeOption) {
       // Regular selection behavior for non-toggleable items
-      onSubmenuItemChange(item.label)
+      setActiveSubmenuItem(item.label)
       setSelectedItem(activeOption, item.label)
       
       // If it's a color item, update the cube color
@@ -231,75 +228,78 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
   const currentSubmenuItems = activeOption ? getSubmenuItems(activeOption) : []
 
   return (
-    <div className="mobile-menu">
-      {showSubmenu && currentSubmenuItems.length > 0 && (
-        <div 
-          ref={submenuContainerRef}
-          className="submenu-container"
-        >
+    <div className="mobile-ui">
+      {/* Mobile Menu */}
+      <div className="mobile-menu">
+        {showSubmenu && currentSubmenuItems.length > 0 && (
           <div 
-            ref={submenuScrollRef}
-            className="submenu-scroll"
-            onTouchStart={handleSubmenuTouchStart}
-            onTouchMove={handleSubmenuTouchMove}
-            onTouchEnd={handleSubmenuTouchEnd}
-            onMouseDown={handleSubmenuMouseDown}
-            onMouseMove={handleSubmenuMouseMove}
-            onMouseUp={handleSubmenuMouseUp}
-            onMouseLeave={handleSubmenuMouseUp}
+            ref={submenuContainerRef}
+            className="submenu-container"
           >
-            {currentSubmenuItems.map((item) => {
-              const IconComponent = item.icon
-              const isToggleable = item.toggleable
-              const isToggled = isToggleable && item.settingKey ? getToggleState(item.settingKey) : false
-              const isActive = !isToggleable && activeSubmenuItem === item.label
-              
-              return (
-                <div key={item.label} className="submenu-item-wrapper">
-                  <div className="submenu-label">{item.label}</div>
-                  <button
-                    className={`submenu-item ${
-                      isToggleable 
-                        ? (isToggled ? 'toggled' : 'untoggled')
-                        : (isActive ? 'active' : 'inactive')
-                    }`}
-                    onClick={() => handleSubmenuItemClick(item)}
-                    style={
-                      item.colorValue && isActive
-                        ? { backgroundColor: item.colorValue }
-                        : {}
-                    }
-                  >
-                    <IconComponent className="submenu-icon" size={20} />
-                  </button>
-                </div>
-              )
-            })}
+            <div 
+              ref={submenuScrollRef}
+              className="submenu-scroll"
+              onTouchStart={handleSubmenuTouchStart}
+              onTouchMove={handleSubmenuTouchMove}
+              onTouchEnd={handleSubmenuTouchEnd}
+              onMouseDown={handleSubmenuMouseDown}
+              onMouseMove={handleSubmenuMouseMove}
+              onMouseUp={handleSubmenuMouseUp}
+              onMouseLeave={handleSubmenuMouseUp}
+            >
+              {currentSubmenuItems.map((item) => {
+                const IconComponent = item.icon
+                const isToggleable = item.toggleable
+                const isToggled = isToggleable && item.settingKey ? getToggleState(item.settingKey) : false
+                const isActive = !isToggleable && activeSubmenuItem === item.label
+                
+                return (
+                  <div key={item.label} className="submenu-item-wrapper">
+                    <div className="submenu-label">{item.label}</div>
+                    <button
+                      className={`submenu-item ${
+                        isToggleable 
+                          ? (isToggled ? 'toggled' : 'untoggled')
+                          : (isActive ? 'active' : 'inactive')
+                      }`}
+                      onClick={() => handleSubmenuItemClick(item)}
+                      style={
+                        item.colorValue && isActive
+                          ? { backgroundColor: item.colorValue }
+                          : {}
+                      }
+                    >
+                      <IconComponent className="submenu-icon" size={20} />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
           </div>
+        )}
+        
+        <div
+          ref={scrollRef}
+          className="nav-scroll-container"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          {menuItems.map((menuItem) => (
+            <button
+              key={menuItem.id}
+              className={`nav-item ${activeOption === menuItem.id ? 'active' : 'inactive'}`}
+              onClick={() => handleMainOptionClick(menuItem.id)}
+            >
+              <span className="nav-label">{menuItem.label}</span>
+              {activeOption === menuItem.id && <div className="active-indicator" />}
+            </button>
+          ))}
         </div>
-      )}
-      
-      <div
-        ref={scrollRef}
-        className="nav-scroll-container"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-      >
-        {menuItems.map((menuItem) => (
-          <button
-            key={menuItem.id}
-            className={`nav-item ${activeOption === menuItem.id ? 'active' : 'inactive'}`}
-            onClick={() => handleMainOptionClick(menuItem.id)}
-          >
-            <span className="nav-label">{menuItem.label}</span>
-            {activeOption === menuItem.id && <div className="active-indicator" />}
-          </button>
-        ))}
       </div>
     </div>
   )
