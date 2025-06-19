@@ -1,0 +1,351 @@
+.floating-ui {
+  position: fixed;
+  top: calc(20px + var(--safe-area-inset-top, 0px));
+  right: calc(20px + var(--safe-area-inset-right, 0px));
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Visibility states with fade animations */
+.floating-ui.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.floating-ui.hidden {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  pointer-events: none;
+}
+
+/* Menu items container - always visible when parent is visible */
+.floating-ui-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.5;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transition: inherit; /* Inherit parent transition */
+}
+
+.floating-ui-item-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.floating-ui-item {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  color: #333;
+}
+
+.floating-ui-icon {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.floating-ui-item:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+  color: #000;
+}
+
+.floating-ui-item:hover .floating-ui-icon {
+  opacity: 1;
+}
+
+.floating-ui-item.help-button.active {
+  background: rgba(255, 235, 59, 0.3) !important;
+  color: #000 !important;
+}
+
+.floating-ui-item.help-button.active .floating-ui-icon {
+  opacity: 1;
+}
+
+.floating-ui-item:active {
+  transform: scale(0.95);
+}
+
+.floating-ui-item:focus {
+  outline: none;
+  border-color: #ffeb3b;
+  box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.3);
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  z-index: 1101;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInTooltip 0.2s ease-out forwards;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 3px solid transparent;
+  border-left-color: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Individual item animations - only when visible */
+.floating-ui.visible .floating-ui-item:nth-child(1) {
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+.floating-ui.visible .floating-ui-item:nth-child(2) {
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+}
+
+.floating-ui.visible .floating-ui-item:nth-child(3) {
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+.floating-ui.visible .floating-ui-item:nth-child(4) {
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+  .floating-ui {
+    top: calc(15px + var(--safe-area-inset-top, 0px));
+    right: calc(15px + var(--safe-area-inset-right, 0px));
+    gap: 5px;
+  }
+
+  .floating-ui-items {
+    gap: 3px;
+  }
+
+  .floating-ui-item {
+    width: 23px;
+    height: 23px;
+  }
+
+  .tooltip {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+  .floating-ui {
+    top: calc(12px + var(--safe-area-inset-top, 0px));
+    right: calc(12px + var(--safe-area-inset-right, 0px));
+    gap: 4px;
+  }
+
+  .floating-ui-items {
+    gap: 2px;
+  }
+
+  .floating-ui-item {
+    width: 21px;
+    height: 21px;
+  }
+
+  .tooltip {
+    font-size: 8px;
+    padding: 2px 5px;
+  }
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .floating-ui {
+    top: calc(30px + var(--safe-area-inset-top, 0px));
+    right: calc(30px + var(--safe-area-inset-right, 0px));
+    gap: 8px;
+  }
+
+  .floating-ui-items {
+    gap: 6px;
+  }
+
+  .floating-ui-item {
+    width: 28px;
+    height: 28px;
+  }
+
+  .tooltip {
+    font-size: 11px;
+    padding: 5px 9px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .floating-ui {
+    top: calc(10px + var(--safe-area-inset-top, 0px));
+    right: calc(15px + var(--safe-area-inset-right, 0px));
+    gap: 3px;
+  }
+
+  .floating-ui-items {
+    gap: 2px;
+  }
+
+  .floating-ui-item {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tooltip {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .floating-ui-item,
+  .tooltip {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .floating-ui-item:hover {
+    transform: none;
+  }
+
+  .floating-ui-item:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.9);
+  }
+}
+
+/* Force hardware acceleration */
+.floating-ui,
+.floating-ui-items,
+.floating-ui-item,
+.tooltip {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* Ensure visibility on all backgrounds */
+.floating-ui-item {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* High-resolution mobile devices specific adjustments */
+@media screen and (min-width: 390px) and (max-width: 400px) and (min-height: 800px) and (max-height: 900px) {
+  .floating-ui {
+    top: calc(25px + var(--safe-area-inset-top, 0px));
+    right: calc(25px + var(--safe-area-inset-right, 0px));
+    gap: 7px;
+  }
+
+  .floating-ui-items {
+    gap: 5px;
+  }
+
+  .floating-ui-item {
+    width: 26px;
+    height: 26px;
+  }
+
+  .tooltip {
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+}
+
+/* Prevent conflicts with other UI elements */
+.floating-ui {
+  isolation: isolate;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .floating-ui,
+  .floating-ui-items,
+  .floating-ui-item,
+  .tooltip {
+    transition: none;
+    animation: none;
+  }
+  
+  /* Still allow visibility changes but without animation */
+  .floating-ui.visible {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .floating-ui.hidden {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+@media (prefers-reduced-motion: no-preference) {
+  .floating-ui-item:focus-visible {
+    outline: 2px solid #ffeb3b;
+    outline-offset: 1px;
+  }
+}

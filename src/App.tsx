@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Environment } from '@react-three/drei'
 import { Mesh } from 'three'
 import MobileMenu from './components/MobileMenu'
+import FloatingUI from './components/FloatingUI'
 import { useStore } from './store/useStore'
 
 function RotatingCube() {
@@ -24,6 +25,102 @@ function RotatingCube() {
 
 function App() {
   const environmentPreset = useStore((state) => state.environmentPreset)
+  const orbitControlsRef = useRef<any>(null)
+  const [showFloatingUI, setShowFloatingUI] = useState(true)
+  const activityTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  // Reset activity timer
+  const resetActivityTimer = () => {
+    if (activityTimeoutRef.current) {
+      clearTimeout(activityTimeoutRef.current)
+    }
+    
+    // Show FloatingUI if it was hidden
+    setShowFloatingUI(true)
+    
+    // Set new timeout to hide after 4 seconds
+    activityTimeoutRef.current = setTimeout(() => {
+      setShowFloatingUI(false)
+    }, 4000)
+  }
+
+  // Set up activity listeners for the canvas
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const events = [
+      'mousedown',
+      'mousemove',
+      'mouseup',
+      'wheel',
+      'touchstart',
+      'touchmove',
+      'touchend',
+      'pointerdown',
+      'pointermove',
+      'pointerup'
+    ]
+
+    // Add event listeners to canvas
+    events.forEach(event => {
+      canvas.addEventListener(event, resetActivityTimer, { passive: true })
+    })
+
+    // Start initial timer
+    resetActivityTimer()
+
+    // Cleanup
+    return () => {
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current)
+      }
+      events.forEach(event => {
+        canvas.removeEventListener(event, resetActivityTimer)
+      })
+    }
+  }, [])
+
+  const handleResetView = () => {
+    if (orbitControlsRef.current) {
+      // Reset camera position and rotation
+      orbitControlsRef.current.reset()
+    }
+    console.log('Reset view triggered')
+    resetActivityTimer() // Reset timer on interaction
+  }
+
+  const handleShowcaseView = () => {
+    if (orbitControlsRef.current) {
+      // Set a nice showcase angle
+      orbitControlsRef.current.setAzimuthalAngle(Math.PI / 4)
+      orbitControlsRef.current.setPolarAngle(Math.PI / 3)
+      orbitControlsRef.current.update()
+    }
+    console.log('Showcase view triggered')
+    resetActivityTimer() // Reset timer on interaction
+  }
+
+  const handleShareSocial = () => {
+    // Share functionality - could capture canvas as image and share
+    if (navigator.share) {
+      navigator.share({
+        title: '3D Mobile App',
+        text: 'Check out this cool 3D app!',
+        url: window.location.href,
+      }).catch(console.error)
+    } else {
+      // Fallback for browsers without native sharing
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard!')
+      }).catch(() => {
+        alert('Unable to share. Please copy the URL manually.')
+      })
+    }
+    console.log('Share social triggered')
+    resetActivityTimer() // Reset timer on interaction
+  }
 
   return (
     <div style={{ 
@@ -35,6 +132,7 @@ function App() {
     }}>
       {/* 3D Scene Background */}
       <Canvas
+        ref={canvasRef}
         camera={{ position: [5, 5, 5], fov: 50 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => {
@@ -58,6 +156,7 @@ function App() {
         <Environment preset={environmentPreset as any} background={true} />
         
         <OrbitControls
+          ref={orbitControlsRef}
           enablePan={false}
           enableZoom={false}
           enableRotate={true}
@@ -67,6 +166,14 @@ function App() {
           maxPolarAngle={3 * Math.PI / 4}
         />
       </Canvas>
+      
+      {/* Floating UI with conditional visibility */}
+      <FloatingUI 
+        visible={showFloatingUI}
+        onResetView={handleResetView}
+        onShowcaseView={handleShowcaseView}
+        onShareSocial={handleShareSocial}
+      />
       
       {/* Mobile Menu with UI Overlay */}
       <MobileMenu />
