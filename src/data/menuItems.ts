@@ -1,4 +1,4 @@
-import { Box, RectangleHorizontal, Circle, Underline as Cylinder, Triangle, Diamond, Frame as Pyramid, Hexagon, Octagon as Pentagon, Brush as Torus, CircleEllipsis as Ellipsis, Square, SquareStack, Zap, Star, Heart, Bookmark, Flag, Target, Award, Shield, Settings, Wrench, PenTool as Tool, Palette } from 'lucide-react'
+import { Box, RectangleHorizontal, Circle, Underline as Cylinder, Triangle, Diamond, Frame as Pyramid, Hexagon, Octagon as Pentagon, Brush as Torus, CircleEllipsis as Ellipsis, Square, SquareStack, Zap, Star, Heart, Bookmark, Flag, Target, Award, Shield, Settings, Wrench, PenTool as Tool, Palette, Sun, Moon, Sunrise, Trees, Building, MapPin, Sunset, CloudRain } from 'lucide-react'
 
 export interface SubmenuItem {
   label: string
@@ -6,6 +6,7 @@ export interface SubmenuItem {
   toggleable?: boolean
   settingKey?: string // Key for storing toggle state in Zustand
   colorValue?: string // For color items
+  environmentPreset?: string // For environment presets
 }
 
 export interface MenuItem {
@@ -51,12 +52,17 @@ export const menuItems: MenuItem[] = [
     ]
   },
   {
-    id: 'option3',
-    label: 'Option3',
+    id: 'lighting',
+    label: 'Lighting',
     submenu: [
-      { label: 'Heart', icon: Heart },
-      { label: 'Bookmark', icon: Bookmark },
-      { label: 'Flag', icon: Flag }
+      { label: 'Studio', icon: Sun, environmentPreset: 'studio' },
+      { label: 'City', icon: Building, environmentPreset: 'city' },
+      { label: 'Dawn', icon: Sunrise, environmentPreset: 'dawn' },
+      { label: 'Forest', icon: Trees, environmentPreset: 'forest' },
+      { label: 'Lobby', icon: MapPin, environmentPreset: 'lobby' },
+      { label: 'Park', icon: Trees, environmentPreset: 'park' },
+      { label: 'Night', icon: Moon, environmentPreset: 'night' },
+      { label: 'Sunset', icon: Sunset, environmentPreset: 'sunset' }
     ]
   },
   {

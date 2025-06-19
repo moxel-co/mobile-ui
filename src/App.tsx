@@ -23,6 +23,8 @@ function RotatingCube() {
 }
 
 function App() {
+  const environmentPreset = useStore((state) => state.environmentPreset)
+
   return (
     <div style={{ 
       width: '100vw', 
@@ -53,7 +55,7 @@ function App() {
         
         <RotatingCube />
         
-        <Environment preset="studio" background={false} />
+        <Environment preset={environmentPreset as any} background={true} />
         
         <OrbitControls
           enablePan={false}

@@ -11,12 +11,16 @@ interface MenuState {
   // Current cube color
   cubeColor: string
   
+  // Current environment preset
+  environmentPreset: string
+  
   // Actions
   setSelectedItem: (menuId: string, itemLabel: string | null) => void
   toggleSetting: (settingKey: string) => void
   getToggleState: (settingKey: string) => boolean
   getSelectedItem: (menuId: string) => string | null
   setCubeColor: (color: string) => void
+  setEnvironmentPreset: (preset: string) => void
 }
 
 // Default toggle states for settings
@@ -32,6 +36,7 @@ export const useStore = create<MenuState>()(
       selectedItems: {},
       toggleStates: defaultToggleStates,
       cubeColor: '#64ffda', // Default cyan color
+      environmentPreset: 'studio', // Default environment preset
       
       setSelectedItem: (menuId: string, itemLabel: string | null) =>
         set((state) => ({
@@ -62,6 +67,11 @@ export const useStore = create<MenuState>()(
       setCubeColor: (color: string) =>
         set(() => ({
           cubeColor: color
+        })),
+      
+      setEnvironmentPreset: (preset: string) =>
+        set(() => ({
+          environmentPreset: preset
         }))
     }),
     {
@@ -69,7 +79,8 @@ export const useStore = create<MenuState>()(
       partialize: (state) => ({
         selectedItems: state.selectedItems,
         toggleStates: state.toggleStates,
-        cubeColor: state.cubeColor
+        cubeColor: state.cubeColor,
+        environmentPreset: state.environmentPreset
       })
     }
   )

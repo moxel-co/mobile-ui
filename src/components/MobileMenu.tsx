@@ -21,7 +21,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
   const [showSubmenu, setShowSubmenu] = useState(false)
 
   // Zustand store actions and state
-  const { setSelectedItem, toggleSetting, getToggleState, getSelectedItem, setCubeColor } = useStore()
+  const { setSelectedItem, toggleSetting, getToggleState, getSelectedItem, setCubeColor, setEnvironmentPreset } = useStore()
 
   // Auto-scroll to active option
   useEffect(() => {
@@ -64,6 +64,10 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
             if (firstItem.colorValue) {
               setCubeColor(firstItem.colorValue)
             }
+            // If it's an environment preset, update the environment
+            if (firstItem.environmentPreset) {
+              setEnvironmentPreset(firstItem.environmentPreset)
+            }
           }
         }
       } else {
@@ -72,7 +76,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     } else {
       onSubmenuItemChange(null)
     }
-  }, [activeOption, onSubmenuItemChange, getSelectedItem, setSelectedItem, setCubeColor])
+  }, [activeOption, onSubmenuItemChange, getSelectedItem, setSelectedItem, setCubeColor, setEnvironmentPreset])
 
   // Update submenu scroll indicators and scrollable state
   useEffect(() => {
@@ -203,7 +207,7 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
     }
   }
 
-  const handleSubmenuItemClick = (item: { label: string; toggleable?: boolean; settingKey?: string; colorValue?: string }) => {
+  const handleSubmenuItemClick = (item: { label: string; toggleable?: boolean; settingKey?: string; colorValue?: string; environmentPreset?: string }) => {
     if (item.toggleable && item.settingKey) {
       // Toggle the setting in the store
       toggleSetting(item.settingKey)
@@ -215,6 +219,11 @@ function MobileMenu({ activeOption, onOptionChange, activeSubmenuItem, onSubmenu
       // If it's a color item, update the cube color
       if (item.colorValue) {
         setCubeColor(item.colorValue)
+      }
+      
+      // If it's an environment preset, update the environment
+      if (item.environmentPreset) {
+        setEnvironmentPreset(item.environmentPreset)
       }
     }
   }

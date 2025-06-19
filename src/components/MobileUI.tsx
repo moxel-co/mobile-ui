@@ -7,8 +7,8 @@ function MobileUI() {
   const [activeOption, setActiveOption] = useState<string | null>(null) // Start with no active option
   const [activeSubmenuItem, setActiveSubmenuItem] = useState<string | null>(null)
   
-  // Get toggle states and cube color from store for display
-  const { getToggleState, cubeColor } = useStore()
+  // Get toggle states, cube color, and environment preset from store for display
+  const { getToggleState, cubeColor, environmentPreset } = useStore()
 
   return (
     <div className="mobile-ui">
@@ -21,9 +21,10 @@ function MobileUI() {
           <p className="active-submenu-item">{activeSubmenuItem}</p>
         )}
         
-        {/* Display current toggle states and cube color for debugging/info */}
-        <div style={{ marginTop: '10px', fontSize: '12px', opacity: 0.7 }}>
+        {/* Display current toggle states, cube color, and environment for debugging/info */}
+        <div className="debug-info">
           <div>Cube Color: {cubeColor}</div>
+          <div>Environment: {environmentPreset}</div>
           <div>Auto Rotate: {getToggleState('auto-rotate') ? 'ON' : 'OFF'}</div>
           <div>Show Grid: {getToggleState('show-grid') ? 'ON' : 'OFF'}</div>
           <div>Debug Mode: {getToggleState('debug-mode') ? 'ON' : 'OFF'}</div>

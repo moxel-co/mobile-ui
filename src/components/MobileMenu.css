@@ -1,5 +1,5 @@
 .mobile-menu {
-  height: 50px;
+  height: 60px;
   background: #000000;
   border-top: 1px solid #333;
   display: flex;
@@ -12,6 +12,7 @@
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   pointer-events: auto; /* Enable interaction with menu */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .nav-scroll-container {
@@ -27,6 +28,7 @@
   width: 100%;
   height: 100%;
   cursor: grab;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-scroll-container::-webkit-scrollbar {
@@ -41,7 +43,7 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 14px);
   padding: 8px 16px;
   border-radius: 20px;
   position: relative;
@@ -52,6 +54,9 @@
   -webkit-tap-highlight-color: transparent;
   outline: none;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .nav-item:focus {
@@ -65,7 +70,8 @@
   opacity: 0.7;
 }
 
-.nav-item.inactive:hover {
+.nav-item.inactive:hover,
+.nav-item.inactive:active {
   color: #888;
   opacity: 0.9;
 }
@@ -77,7 +83,8 @@
   opacity: 1;
 }
 
-.nav-item.active:hover {
+.nav-item.active:hover,
+.nav-item.active:active {
   color: #fff200;
 }
 
@@ -114,36 +121,35 @@
 /* Submenu Styles - Fixed overflow and proper scrolling */
 .submenu-container {
   position: absolute;
-  bottom: 50px;
+  bottom: 60px;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 90px;
   background: none;
   border: none;
   display: flex;
   align-items: center;
   z-index: 1001;
   overflow: hidden;
-  /* Add padding to prevent edge cutoff */
-  padding: 0 10px;
+  padding: 0 12px;
   pointer-events: auto; /* Enable interaction with submenu */
 }
 
 .submenu-scroll {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 0 10px;
+  padding: 0 12px;
   height: 100%;
   cursor: grab;
   width: 100%;
-  /* Remove centering when scrollable to prevent overflow issues */
   justify-content: flex-start;
+  -webkit-overflow-scrolling: touch;
 }
 
 .submenu-scroll::-webkit-scrollbar {
@@ -168,29 +174,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex-shrink: 0;
-  min-width: 50px;
-  /* Ensure consistent spacing */
-  margin: 0 2px;
+  min-width: 55px;
+  margin: 0 3px;
 }
 
 .submenu-label {
   color: white;
-  font-size: 10px;
+  font-size: clamp(9px, 2.2vw, 11px);
   font-weight: normal;
   text-align: center;
-  min-height: 12px;
-  line-height: 1;
+  min-height: 14px;
+  line-height: 1.2;
   white-space: nowrap;
-  max-width: 60px;
+  max-width: 65px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .submenu-item {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: white;
   border: none;
@@ -201,9 +207,12 @@
   -webkit-tap-highlight-color: transparent;
   outline: none;
   transition: all 0.2s ease;
-  /* Prevent shrinking */
   flex-shrink: 0;
   position: relative;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .submenu-item:focus {
@@ -215,11 +224,13 @@
   opacity: 1;
   background: white;
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .submenu-item.inactive {
-  opacity: 0.2;
+  opacity: 0.3;
   background: white;
+  transform: scale(0.95);
 }
 
 /* Toggle states for toggleable items - only yellow highlight when toggled */
@@ -227,6 +238,7 @@
   opacity: 1;
   background: #ffeb3b; /* Yellow when toggled on */
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 235, 59, 0.4);
 }
 
 .submenu-item.toggled .submenu-icon {
@@ -234,24 +246,32 @@
 }
 
 .submenu-item.untoggled {
-  opacity: 0.2;
+  opacity: 0.3;
   background: white; /* Default white when toggled off */
+  transform: scale(0.95);
 }
 
 .submenu-item.untoggled .submenu-icon {
   color: black !important;
 }
 
-.submenu-item:hover {
+.submenu-item:hover,
+.submenu-item:active {
   background: #f0f0f0;
+  transform: scale(1.02);
 }
 
-.submenu-item.toggled:hover {
+.submenu-item.toggled:hover,
+.submenu-item.toggled:active {
   background: #fff200; /* Brighter yellow on hover */
+  transform: scale(1.08);
 }
 
-.submenu-item.untoggled:hover {
+.submenu-item.untoggled:hover,
+.submenu-item.untoggled:active {
   background: #f0f0f0; /* Light gray on hover */
+  opacity: 0.5;
+  transform: scale(0.98);
 }
 
 .submenu-icon {
@@ -260,12 +280,14 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 22px;
+  height: 22px;
 }
 
-/* Mobile optimizations */
-@media (max-width: 768px) {
+/* Mobile-first responsive design */
+@media (max-width: 480px) {
   .mobile-menu {
-    height: 40px;
+    height: 50px;
   }
   
   .nav-scroll-container {
@@ -275,13 +297,64 @@
   
   .nav-item {
     padding: 6px 12px;
-    font-size: 13px;
+    font-size: 12px;
     min-width: 70px;
   }
 
   .submenu-container {
-    bottom: 40px;
-    height: 70px;
+    bottom: 50px;
+    height: 80px;
+    padding: 0 10px;
+  }
+
+  .submenu-scroll {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .submenu-item {
+    width: 45px;
+    height: 45px;
+  }
+
+  .submenu-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .submenu-label {
+    font-size: 9px;
+    max-width: 55px;
+    min-height: 12px;
+  }
+
+  .submenu-item-wrapper {
+    min-width: 50px;
+    margin: 0 2px;
+    gap: 4px;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 360px) {
+  .mobile-menu {
+    height: 45px;
+  }
+  
+  .nav-scroll-container {
+    padding: 0 12px;
+    gap: 10px;
+  }
+  
+  .nav-item {
+    padding: 5px 10px;
+    font-size: 11px;
+    min-width: 65px;
+  }
+
+  .submenu-container {
+    bottom: 45px;
+    height: 75px;
     padding: 0 8px;
   }
 
@@ -291,8 +364,8 @@
   }
 
   .submenu-item {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
   }
 
   .submenu-icon {
@@ -301,27 +374,103 @@
   }
 
   .submenu-label {
-    font-size: 9px;
+    font-size: 8px;
     max-width: 50px;
   }
 
   .submenu-item-wrapper {
     min-width: 45px;
     margin: 0 1px;
+    gap: 3px;
   }
 }
 
-/* Safe area for devices with home indicator */
-@media (max-width: 768px) {
+/* Tablet and larger screens */
+@media (min-width: 768px) {
   .mobile-menu {
-    padding-bottom: env(safe-area-inset-bottom);
+    height: 70px;
+  }
+  
+  .nav-scroll-container {
+    padding: 0 24px;
+    gap: 20px;
+  }
+  
+  .nav-item {
+    padding: 10px 20px;
+    font-size: 16px;
+    min-width: 90px;
+  }
+
+  .submenu-container {
+    bottom: 70px;
+    height: 100px;
+    padding: 0 16px;
+  }
+
+  .submenu-scroll {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .submenu-item {
+    width: 55px;
+    height: 55px;
+  }
+
+  .submenu-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .submenu-label {
+    font-size: 12px;
+    max-width: 70px;
+    min-height: 16px;
+  }
+
+  .submenu-item-wrapper {
+    min-width: 60px;
+    margin: 0 4px;
+    gap: 8px;
   }
 }
 
-/* iPhone X and newer models */
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .mobile-menu {
+    height: 45px;
+  }
+  
+  .submenu-container {
+    bottom: 45px;
+    height: 70px;
+  }
+  
+  .submenu-item {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .submenu-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .submenu-label {
+    font-size: 8px;
+  }
+  
+  .nav-item {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+/* Safe area support for devices with home indicator */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .mobile-menu {
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 5px);
   }
 }
 
@@ -355,4 +504,29 @@
 
 .submenu-container[data-can-scroll-right="true"]::after {
   opacity: 1;
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .nav-item:hover,
+  .submenu-item:hover {
+    transform: none;
+  }
+  
+  .nav-item:active {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .submenu-item:active {
+    transform: scale(0.95);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .nav-item,
+  .submenu-label {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
