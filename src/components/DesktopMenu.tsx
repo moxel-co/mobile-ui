@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { menuItems, getSubmenuItems } from '../data/menuItems'
 import { useStore } from '../store/useStore'
 import { ChevronDown } from 'lucide-react'
 import './styles/DesktopMenu.css'
 
 function DesktopMenu() {
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
   
   // Zustand store actions and state
   const { 
@@ -18,23 +17,18 @@ function DesktopMenu() {
     setEnvironmentPreset 
   } = useStore()
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
   const handleMainMenuClick = (menuId: string) => {
-    // Toggle dropdown - close if same menu is clicked, open if different
-    setActiveDropdown(activeDropdown === menuId ? null : menuId)
+    const newExpandedMenus = new Set(expandedMenus)
+    
+    if (expandedMenus.has(menuId)) {
+      // Collapse the menu
+      newExpandedMenus.delete(menuId)
+    } else {
+      // Expand the menu
+      newExpandedMenus.add(menuId)
+    }
+    
+    setExpandedMenus(newExpandedMenus)
   }
 
   const handleSubmenuItemClick = (
@@ -64,11 +58,6 @@ function DesktopMenu() {
         setEnvironmentPreset(item.environmentPreset)
       }
     }
-    
-    // Close dropdown after selection for non-toggleable items
-    if (!item.toggleable) {
-      setActiveDropdown(null)
-    }
   }
 
   // Helper function to get the icon for a menu item
@@ -89,7 +78,7 @@ function DesktopMenu() {
   }
 
   return (
-    <div className="desktop-menu" ref={dropdownRef}>
+    <div className="desktop-menu">
       <div className="desktop-menu-header">
         <h2 className="desktop-menu-title">3D Controls</h2>
         <p className="desktop-menu-subtitle">Customize your 3D experience</p>
@@ -99,14 +88,14 @@ function DesktopMenu() {
         {menuItems.map((menuItem) => {
           const submenuItems = getSubmenuItems(menuItem.id)
           const hasSubmenu = submenuItems.length > 0
-          const isActive = activeDropdown === menuItem.id
+          const isExpanded = expandedMenus.has(menuItem.id)
           const selectedItem = getSelectedItem(menuItem.id)
           const IconComponent = getMenuItemIcon(menuItem)
 
           return (
             <div key={menuItem.id} className="desktop-menu-item">
               <button
-                className={`desktop-menu-button ${isActive ? 'active' : ''}`}
+                className={`desktop-menu-button ${isExpanded ? 'expanded' : ''}`}
                 onClick={() => handleMainMenuClick(menuItem.id)}
                 disabled={!hasSubmenu}
               >
@@ -122,15 +111,15 @@ function DesktopMenu() {
                 {hasSubmenu && (
                   <ChevronDown 
                     size={16} 
-                    className={`desktop-menu-chevron ${isActive ? 'rotated' : ''}`}
+                    className={`desktop-menu-chevron ${isExpanded ? 'rotated' : ''}`}
                   />
                 )}
               </button>
 
-              {hasSubmenu && isActive && (
-                <div className="desktop-dropdown">
-                  <div className="desktop-dropdown-content">
-                    <div className="desktop-dropdown-grid">
+              {hasSubmenu && isExpanded && (
+                <div className="desktop-submenu">
+                  <div className="desktop-submenu-content">
+                    <div className="desktop-submenu-grid">
                       {submenuItems.map((item) => {
                         const IconComponent = item.icon
                         const isToggleable = item.toggleable
@@ -140,7 +129,7 @@ function DesktopMenu() {
                         return (
                           <button
                             key={item.label}
-                            className={`desktop-dropdown-item ${
+                            className={`desktop-submenu-item ${
                               isToggleable 
                                 ? (isToggled ? 'toggled' : 'untoggled')
                                 : (isSelected ? 'selected' : '')
@@ -152,12 +141,12 @@ function DesktopMenu() {
                                 : {}
                             }
                           >
-                            <div className="desktop-dropdown-item-icon">
+                            <div className="desktop-submenu-item-icon">
                               <IconComponent size={20} />
                             </div>
                             
                             {/* Tooltip with label */}
-                            <div className="desktop-dropdown-item-tooltip">
+                            <div className="desktop-submenu-item-tooltip">
                               {item.label}
                             </div>
 
