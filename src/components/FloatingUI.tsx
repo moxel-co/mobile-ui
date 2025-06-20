@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { RotateCcw, Eye, Share2, HelpCircle } from 'lucide-react'
-import './FloatingUI.css'
+import './styles/FloatingUI.css'
 
 interface FloatingUIProps {
   visible: boolean
   onResetView: () => void
   onShowcaseView: () => void
   onShareSocial: () => void
+  canvasWidth?: number // Percentage of screen width the canvas occupies
 }
 
-function FloatingUI({ visible, onResetView, onShowcaseView, onShareSocial }: FloatingUIProps) {
+function FloatingUI({ visible, onResetView, onShowcaseView, onShareSocial, canvasWidth = 100 }: FloatingUIProps) {
   const [showTooltips, setShowTooltips] = useState(false)
 
   const handleResetView = () => {
@@ -32,8 +33,28 @@ function FloatingUI({ visible, onResetView, onShowcaseView, onShareSocial }: Flo
     setShowTooltips(!showTooltips)
   }
 
+  // Calculate positioning based on canvas width
+  const getPositionStyle = () => {
+    if (canvasWidth === 100) {
+      // Mobile/tablet - full width canvas
+      return {
+        right: 'calc(20px + var(--safe-area-inset-right, 0px))'
+      }
+    } else {
+      // Desktop - positioned within canvas bounds
+      // Calculate right position to stay within canvas area
+      const canvasWidthPx = `${canvasWidth}vw`
+      return {
+        right: `calc(20px + (100vw - ${canvasWidthPx}))`
+      }
+    }
+  }
+
   return (
-    <div className={`floating-ui ${visible ? 'visible' : 'hidden'}`}>
+    <div 
+      className={`floating-ui ${visible ? 'visible' : 'hidden'}`}
+      style={getPositionStyle()}
+    >
       {/* Menu items - always visible when parent is visible */}
       <div className="floating-ui-items">
         <div className="floating-ui-item-container">

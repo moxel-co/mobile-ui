@@ -162,10 +162,21 @@
   -webkit-user-select: none;
   font-weight: 500;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .nav-item:focus {
   outline: none;
+}
+
+/* Icon styling for main menu items */
+.nav-icon {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 /* INACTIVE STATE - Default state for all items */
@@ -175,11 +186,19 @@
   opacity: 0.8;
 }
 
+.nav-item.inactive .nav-icon {
+  opacity: 0.6;
+}
+
 .nav-item.inactive:hover,
 .nav-item.inactive:active {
   color: #aaa;
   opacity: 1;
   background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.inactive:hover .nav-icon {
+  opacity: 0.8;
 }
 
 /* ACTIVE STATE - Only for the currently selected item */
@@ -190,16 +209,27 @@
   background: rgba(255, 235, 59, 0.1);
 }
 
+.nav-item.active .nav-icon {
+  opacity: 1;
+  color: #ffeb3b;
+}
+
 .nav-item.active:hover,
 .nav-item.active:active {
   color: #fff200;
   background: rgba(255, 235, 59, 0.15);
 }
 
+.nav-item.active:hover .nav-icon {
+  color: #fff200;
+}
+
 .nav-label {
   display: block;
   position: relative;
   z-index: 2;
+  font-size: 12px;
+  line-height: 1;
 }
 
 /* Active indicator - only shows for active items */
@@ -459,6 +489,10 @@
     min-width: 60px;
   }
 
+  .nav-label {
+    font-size: 11px;
+  }
+
   .submenu-container {
     bottom: calc(60px + var(--safe-area-inset-bottom, 0px));
     height: 80px;
@@ -547,6 +581,10 @@
     padding: 4px 7px;
     font-size: 12px;
     min-width: 55px;
+  }
+
+  .nav-label {
+    font-size: 10px;
   }
 
   .submenu-container {
@@ -638,6 +676,10 @@
     padding: 8px 14px;
     font-size: 16px;
     min-width: 80px;
+  }
+
+  .nav-label {
+    font-size: 14px;
   }
 
   .submenu-container {
@@ -749,6 +791,10 @@
   .nav-item {
     font-size: 11px;
     padding: 4px 6px;
+  }
+
+  .nav-label {
+    font-size: 9px;
   }
 }
 
@@ -982,6 +1028,10 @@
     font-size: 15px;
     padding: 6px 12px;
     min-width: 75px;
+  }
+
+  .nav-label {
+    font-size: 12px;
   }
 
   /* Reduce padding between submenu items for high-res devices */

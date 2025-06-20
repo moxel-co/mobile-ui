@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { menuItems, getSubmenuItems, hasSubmenu } from '../data/menuItems'
 import { useStore } from '../store/useStore'
-import './MobileMenu.css'
+import './styles/MobileMenu.css'
 
 function MobileMenu() {
   const [activeOption, setActiveOption] = useState<string | null>(null) // Start with no active option
@@ -225,6 +225,23 @@ function MobileMenu() {
     }
   }
 
+  // Helper function to get the icon for a menu item
+  const getMenuItemIcon = (menuItem: typeof menuItems[0]) => {
+    const selectedItem = getSelectedItem(menuItem.id)
+    
+    if (selectedItem) {
+      // Find the selected submenu item and use its icon
+      const submenuItems = getSubmenuItems(menuItem.id)
+      const selectedSubmenuItem = submenuItems.find(item => item.label === selectedItem)
+      if (selectedSubmenuItem) {
+        return selectedSubmenuItem.icon
+      }
+    }
+    
+    // Fallback to the main menu item icon
+    return menuItem.icon
+  }
+
   const currentSubmenuItems = activeOption ? getSubmenuItems(activeOption) : []
 
   return (
@@ -289,16 +306,20 @@ function MobileMenu() {
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         >
-          {menuItems.map((menuItem) => (
-            <button
-              key={menuItem.id}
-              className={`nav-item ${activeOption === menuItem.id ? 'active' : 'inactive'}`}
-              onClick={() => handleMainOptionClick(menuItem.id)}
-            >
-              <span className="nav-label">{menuItem.label}</span>
-              {activeOption === menuItem.id && <div className="active-indicator" />}
-            </button>
-          ))}
+          {menuItems.map((menuItem) => {
+            const IconComponent = getMenuItemIcon(menuItem)
+            return (
+              <button
+                key={menuItem.id}
+                className={`nav-item ${activeOption === menuItem.id ? 'active' : 'inactive'}`}
+                onClick={() => handleMainOptionClick(menuItem.id)}
+              >
+                <IconComponent className="nav-icon" size={16} />
+                <span className="nav-label">{menuItem.label}</span>
+                {activeOption === menuItem.id && <div className="active-indicator" />}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

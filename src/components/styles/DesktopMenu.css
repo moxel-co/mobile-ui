@@ -1,0 +1,444 @@
+.desktop-menu {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-left: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.desktop-menu-header {
+  padding: 32px 24px 24px;
+  border-bottom: 1px solid #333;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.desktop-menu-title {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.desktop-menu-subtitle {
+  color: #aaa;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.desktop-menu-content {
+  flex: 1;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.desktop-menu-item {
+  position: relative;
+  margin: 0 16px;
+}
+
+.desktop-menu-button {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 4px; /* Reduced from 8px to 4px */
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  min-height: 44px;
+}
+
+.desktop-menu-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #555;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.desktop-menu-button.active {
+  background: rgba(255, 235, 59, 0.1);
+  border-color: #ffeb3b;
+  color: #ffeb3b;
+}
+
+.desktop-menu-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.desktop-menu-button:disabled:hover {
+  background: transparent;
+  border-color: #333;
+  transform: none;
+  box-shadow: none;
+}
+
+.desktop-menu-button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.desktop-menu-button-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.desktop-menu-icon {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.desktop-menu-button.active .desktop-menu-icon {
+  opacity: 1;
+  color: #ffeb3b;
+}
+
+.desktop-menu-button-label {
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desktop-menu-button-selected {
+  font-size: 12px;
+  color: #64ffda;
+  font-weight: 500;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.desktop-menu-chevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.desktop-menu-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.desktop-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin-top: 4px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.desktop-dropdown-content {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px; /* Reduced from 12px to 6px */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 16px;
+}
+
+/* Grid layout for submenu items */
+.desktop-dropdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+
+.desktop-dropdown-item {
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 6px; /* Reduced from 12px to 6px */
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #fff;
+  outline: none;
+  position: relative;
+  overflow: visible;
+}
+
+.desktop-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #777;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.desktop-dropdown-item.selected {
+  background: rgba(255, 235, 59, 0.15);
+  border-color: #ffeb3b;
+  color: #ffeb3b;
+  box-shadow: 0 0 12px rgba(255, 235, 59, 0.3);
+}
+
+.desktop-dropdown-item.toggled {
+  background: rgba(255, 235, 59, 0.2);
+  border-color: #ffeb3b;
+  color: #ffeb3b;
+  box-shadow: 0 0 12px rgba(255, 235, 59, 0.4);
+}
+
+.desktop-dropdown-item.untoggled {
+  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.desktop-dropdown-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Tooltip for labels on hover */
+.desktop-dropdown-item-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px; /* Reduced from 6px to 4px */
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.desktop-dropdown-item:hover .desktop-dropdown-item-tooltip {
+  opacity: 1;
+}
+
+.desktop-dropdown-item-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Selected indicator for regular items */
+.desktop-selected-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #64ffda;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.desktop-menu-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #333;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.desktop-menu-info {
+  color: #888;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.4;
+  text-align: center;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling */
+.desktop-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.desktop-menu::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.desktop-menu::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.desktop-menu::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Responsive adjustments for smaller desktop screens */
+@media (max-width: 1200px) {
+  .desktop-menu-header {
+    padding: 24px 20px 20px;
+  }
+
+  .desktop-menu-title {
+    font-size: 22px;
+  }
+
+  .desktop-menu-subtitle {
+    font-size: 13px;
+  }
+
+  .desktop-menu-button {
+    padding: 10px 14px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+
+  .desktop-dropdown-content {
+    padding: 12px;
+  }
+
+  .desktop-dropdown-grid {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 10px;
+  }
+
+  .desktop-dropdown-item {
+    width: 50px;
+    height: 50px;
+  }
+
+  .desktop-dropdown-item-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .desktop-dropdown-item-tooltip {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* Adjust grid for very narrow desktop menus */
+@media (max-width: 1000px) {
+  .desktop-menu-button {
+    padding: 8px 12px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+
+  .desktop-menu-button-selected {
+    font-size: 11px;
+    max-width: 100px;
+  }
+
+  .desktop-dropdown-grid {
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 8px;
+  }
+
+  .desktop-dropdown-item {
+    width: 45px;
+    height: 45px;
+  }
+
+  .desktop-dropdown-item-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .desktop-menu {
+    border-left-color: #fff;
+  }
+
+  .desktop-menu-button {
+    border-color: #fff;
+  }
+
+  .desktop-dropdown-content {
+    border-color: #fff;
+  }
+
+  .desktop-dropdown-item {
+    border-color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .desktop-menu-button,
+  .desktop-menu-chevron,
+  .desktop-dropdown-item,
+  .desktop-dropdown-item-tooltip {
+    transition: none;
+  }
+
+  .desktop-dropdown {
+    animation: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.desktop-menu-button:focus-visible,
+.desktop-dropdown-item:focus-visible {
+  outline: 2px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
+/* Force hardware acceleration */
+.desktop-menu,
+.desktop-dropdown,
+.desktop-dropdown-item-tooltip {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}

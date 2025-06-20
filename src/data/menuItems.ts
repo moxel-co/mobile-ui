@@ -1,4 +1,4 @@
-import { Box, RectangleHorizontal, Circle, Underline as Cylinder, Triangle, Diamond, Frame as Pyramid, Hexagon, Octagon as Pentagon, Brush as Torus, CircleEllipsis as Ellipsis, Square, SquareStack, Zap, Star, Heart, Bookmark, Flag, Target, Award, Shield, Settings, Wrench, PenTool as Tool, Palette, Sun, Moon, Sunrise, Trees, Building, MapPin, Sunset, CloudRain } from 'lucide-react'
+import { Box, RectangleHorizontal, Circle, Underline as Cylinder, Triangle, Diamond, Frame as Pyramid, Hexagon, Octagon as Pentagon, Brush as Torus, CircleEllipsis as Ellipsis, Square, SquareStack, Zap, Star, Heart, Bookmark, Flag, Target, Award, Shield, Settings, Wrench, PenTool as Tool, Palette, Sun, Moon, Sunrise, Trees, Building, MapPin, Sunset, CloudRain, Shapes, Lightbulb } from 'lucide-react'
 
 export interface SubmenuItem {
   label: string
@@ -12,6 +12,7 @@ export interface SubmenuItem {
 export interface MenuItem {
   id: string
   label: string
+  icon: React.ComponentType<any> // Add icon property to main menu items
   submenu?: SubmenuItem[]
 }
 
@@ -19,6 +20,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'shapes',
     label: 'Shapes',
+    icon: Shapes, // 3D shapes icon
     submenu: [
       { label: 'Cube', icon: Box },
       { label: 'Cuboid', icon: RectangleHorizontal },
@@ -38,6 +40,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'colors',
     label: 'Colors',
+    icon: Palette, // Color palette icon
     submenu: [
       { label: 'Cyan', icon: Palette, colorValue: '#64ffda' },
       { label: 'Red', icon: Palette, colorValue: '#ff6b6b' },
@@ -54,6 +57,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'lighting',
     label: 'Lighting',
+    icon: Lightbulb, // Lighting icon
     submenu: [
       { label: 'Studio', icon: Sun, environmentPreset: 'studio' },
       { label: 'City', icon: Building, environmentPreset: 'city' },
@@ -68,6 +72,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'option4',
     label: 'Option4',
+    icon: Star, // Star icon for option4
     submenu: [
       { label: 'Target', icon: Target },
       { label: 'Award', icon: Award },
@@ -79,6 +84,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'option5',
     label: 'Option5',
+    icon: Zap, // Lightning icon for option5
     submenu: [
       { label: 'Zap', icon: Zap },
       { label: 'Heart', icon: Heart },
@@ -89,6 +95,7 @@ export const menuItems: MenuItem[] = [
   {
     id: 'settings',
     label: 'Settings',
+    icon: Settings, // Settings gear icon
     submenu: [
       { label: 'Auto Rotate', icon: Settings, toggleable: true, settingKey: 'auto-rotate' },
       { label: 'Show Grid', icon: Wrench, toggleable: true, settingKey: 'show-grid' },
