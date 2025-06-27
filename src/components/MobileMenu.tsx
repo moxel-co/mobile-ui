@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { menuItems, getSubmenuItems, hasSubmenu } from '../data/menuItems'
 import { useStore } from '../store/useStore'
+import ColorCircle from './ColorCircle'
 import './styles/MobileMenu.css'
 
 function MobileMenu() {
@@ -286,7 +287,11 @@ function MobileMenu() {
                           : {}
                       }
                     >
-                      <IconComponent className="submenu-icon" size={20} />
+                      {item.colorValue ? (
+                        <ColorCircle color={item.colorValue} size={20} className="submenu-icon" />
+                      ) : (
+                        <IconComponent className="submenu-icon" size={20} />
+                      )}
                     </button>
                   </div>
                 )

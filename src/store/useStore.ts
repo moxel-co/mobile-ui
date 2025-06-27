@@ -23,6 +23,15 @@ interface MenuState {
   setEnvironmentPreset: (preset: string) => void
 }
 
+// Default selections for each menu category
+const defaultSelectedItems = {
+  'shapes': 'Cube',
+  'colors': 'Cyan',
+  'lighting': 'Studio',
+  'option4': 'Target',
+  'option5': 'Zap'
+}
+
 // Default toggle states for settings
 const defaultToggleStates = {
   'auto-rotate': true,
@@ -33,10 +42,10 @@ const defaultToggleStates = {
 export const useStore = create<MenuState>()(
   persist(
     (set, get) => ({
-      selectedItems: {},
+      selectedItems: defaultSelectedItems,
       toggleStates: defaultToggleStates,
-      cubeColor: '#64ffda', // Default cyan color
-      environmentPreset: 'studio', // Default environment preset
+      cubeColor: '#64ffda', // Default cyan color (matches default color selection)
+      environmentPreset: 'studio', // Default environment preset (matches default lighting selection)
       
       setSelectedItem: (menuId: string, itemLabel: string | null) =>
         set((state) => ({

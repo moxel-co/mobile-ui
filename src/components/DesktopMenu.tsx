@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { menuItems, getSubmenuItems } from '../data/menuItems'
 import { useStore } from '../store/useStore'
 import { ChevronDown } from 'lucide-react'
+import ColorCircle from './ColorCircle'
 import './styles/DesktopMenu.css'
 
 function DesktopMenu() {
@@ -142,7 +143,11 @@ function DesktopMenu() {
                             }
                           >
                             <div className="desktop-submenu-item-icon">
-                              <IconComponent size={20} />
+                              {item.colorValue ? (
+                                <ColorCircle color={item.colorValue} size={20} />
+                              ) : (
+                                <IconComponent size={20} />
+                              )}
                             </div>
                             
                             {/* Tooltip with label */}
