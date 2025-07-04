@@ -1,3 +1,13 @@
+/* Hide desktop menu completely on mobile devices */
+@media (max-width: 1024px) {
+  .desktop-menu {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
 .desktop-menu {
   width: 100%;
   height: 100%;
@@ -312,7 +322,7 @@
 }
 
 /* Responsive adjustments for smaller desktop screens */
-@media (max-width: 1200px) {
+@media (min-width: 1025px) and (max-width: 1200px) {
   .desktop-menu-header {
     padding: 24px 20px 20px;
   }
@@ -356,7 +366,7 @@
 }
 
 /* Adjust grid for very narrow desktop menus */
-@media (max-width: 1000px) {
+@media (min-width: 1025px) and (max-width: 1000px) {
   .desktop-menu-button {
     padding: 8px 12px;
     font-size: 13px;
